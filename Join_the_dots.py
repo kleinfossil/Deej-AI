@@ -8,6 +8,8 @@ import random
 import argparse
 import re
 
+from save_mongo import save_to_mongo
+
 max_duration = 10 * 60 # avoid adding mixes to mix
 
 def get_track_duration(filename):
@@ -84,6 +86,7 @@ def join_the_dots(tracks, n=5, noise=0): # create a musical journey between give
     playlist.append(end)
     return playlist
 
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('mp3tovec', type=str, help='MP3ToVecs file (full path)')
@@ -91,6 +94,7 @@ if __name__ == '__main__':
     parser.add_argument('output', type=str, help='Output MP3 filename')
     parser.add_argument('n', type=int, help='Number of songs to add between input songs')
     parser.add_argument('--noise', type=float, help='Degree of randomness (0-1)')
+    parser.add_argument('--save_mongo', action="store_true", help='if available it will safe playlist to mongodb')
     args = parser.parse_args()
     mp3tovec_filename = args.mp3tovec
     tracks_filename = args.inputs
@@ -136,6 +140,7 @@ if __name__ == '__main__':
         playlist = join_the_dots(input_tracks, n=n, noise=noise)
     else:
         playlist = make_playlist(input_tracks, size=n, lookback=3, noise=noise)
+    save_to_mongo(playlist=playlist, output=mix_filename)
     tracks = []
     for i, track in enumerate(playlist):
         tracks.append('-i')
