@@ -157,7 +157,7 @@ if __name__ == '__main__':
                     '-y', # replace if exists
                     '-i', 'static/meta_data.txt'] + # use this meta data
                     tracks + # append playlist tracks
-                    ['-filter_complex', f'loudnorm=I=-14,concat=n={len(playlist)}:v=0:a=1[out]', # normalize and concatenate
+                    ['-filter_complex', f'loudnorm=I=-14,concat=n={len(playlist)}:v=0:a=1,acrossfade=d=2:c1=log:c2=log[out]', # normalize and concatenate
                     '-map', '[out]', # final output
                     mix_filename], # output file
                    stdin=sp.PIPE,stdout=sp.PIPE, stderr=sp.PIPE)
